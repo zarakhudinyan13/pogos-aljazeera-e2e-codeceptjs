@@ -1,0 +1,32 @@
+# Node modules
+node_modules/
+
+# CodeceptJS output folder (screenshots, logs, videos, results)
+output/
+
+# Allure report build output
+allure-report/
+allure-results/
+output/allure-results/
+
+# Logs
+logs/
+*.log
+
+# Editor folders
+.vscode/
+.idea/
+
+# OS/system junk
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Playwright / Selenium cache (if created)
+.cache/
+selenium/
+.playwright/

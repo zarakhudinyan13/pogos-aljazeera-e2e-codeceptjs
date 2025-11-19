@@ -1,0 +1,26 @@
+{
+  "name": "pogos-aljazeera-e2e-codeceptjs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zarakhudinyan13/pogos-aljazeera-e2e-codeceptjs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zarakhudinyan13/pogos-aljazeera-e2e-codeceptjs/issues"
+  },
+  "homepage": "https://github.com/zarakhudinyan13/pogos-aljazeera-e2e-codeceptjs#readme",
+  "description": "",
+  "devDependencies": {
+    "@codeceptjs/configure": "^1.0.6",
+    "allure-commandline": "^2.34.1",
+    "codeceptjs": "^3.7.5",
+    "webdriverio": "^9.20.1"
+  }
+}
