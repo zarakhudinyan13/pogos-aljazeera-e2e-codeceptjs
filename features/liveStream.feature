@@ -1,7 +1,12 @@
-Feature: Business rules
-  In order to achieve my goals
-  As a persona
-  I want to be able to interact with a system
+@live
+Feature: Live stream validation
 
-  Scenario: do something
-    Given I have a defined step
+  @desktop
+  Scenario: Player visible
+    Given I am on the Al Jazeera live page on desktop
+    Then the livestream player should be visible
+
+  @desktop
+  Scenario: Switch button visible
+    Given I am on the Al Jazeera live page on desktop
+    Then the Switch Player button should be visible

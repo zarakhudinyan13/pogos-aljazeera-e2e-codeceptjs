@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "selenium:install": "npx selenium-standalone install",
+    "selenium:start": "npx selenium-standalone start",
+    "test:bdd": "codeceptjs run --features --steps",
+    "test:most-read": "codeceptjs run --features --grep most-read --steps",
+    "test:live": "codeceptjs run --features --grep '@live' --steps",
+    "allure:serve": "allure serve output/allure-results",
+    "allure:generate": "allure generate output/allure-results --clean -o output/allure-report"
   },
   "repository": {
     "type": "git",
@@ -18,6 +24,7 @@
   "homepage": "https://github.com/zarakhudinyan13/pogos-aljazeera-e2e-codeceptjs#readme",
   "description": "",
   "devDependencies": {
+    "@codeceptjs/allure-legacy": "^1.0.2",
     "@codeceptjs/configure": "^1.0.6",
     "allure-commandline": "^2.34.1",
     "codeceptjs": "^3.7.5",
