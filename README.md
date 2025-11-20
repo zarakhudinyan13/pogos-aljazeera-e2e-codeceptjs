@@ -38,22 +38,24 @@ repo
 
 ## ▶️ Running Tests Locally
 
-### Install dependencies
+# 1. Clone repo
+git clone https://github.com/zarakhudinyan13/pogos-aljazeera-e2e-codeceptjs.git
+cd pogos-aljazeera-e2e-codeceptjs
 
+# 2. Install dependencies
 npm install
 
+# 3. Install Selenium + ChromeDriver
+npm run selenium:install
 
-### Run full suite (parallel mode)
+# 4. Start Selenium (in a separate terminal)
+npm run selenium:start
 
-
+# 5. Run tests locally in headed mode
 npm run test:all
 
-
-### Run single feature category
-
-
-npm run test:most-read
-npm run test:live
+# (Optional)
+npm run test:ci  # runs in headless CI mode
 
 
 ---

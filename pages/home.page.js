@@ -7,36 +7,45 @@ module.exports = {
   /**
    * Desktop: open home page and handle cookies.
    */
+
 async openDesktop() {
   I.resizeWindow(1600, 1000);
   I.amOnPage("/");
 
-  // Extra stability waits ONLY in CI
-  if (process.env.CI) {
-    I.waitForElement("body", 20);
-    I.retry({ retries: 3 }).waitForElement("#onetrust-accept-btn-handler", 20);
-  } else {
-    I.waitForElement("body", 10);
-  }
+  // ensure page is ready
+  I.waitForElement("body", 15);
 
-  if (await I.grabNumberOfVisibleElements('#onetrust-accept-btn-handler') > 0) {
+  // Click cookie popup only if it exists (CI-safe)
+  const cookiesVisible = await I.grabNumberOfVisibleElements('#onetrust-accept-btn-handler');
+  if (cookiesVisible > 0) {
     I.click('#onetrust-accept-btn-handler');
     I.wait(1);
   }
 
-  // Scroll slightly to trigger lazy loading
+  // small scroll to trigger lazy load
   I.executeScript(() => window.scrollBy(0, 400));
 },
+
+
 
   /**
    * Mobile: open home page and handle cookies.
    */
-  async openMobile() {
-    I.resizeWindow(390, 844);
-    I.amOnPage('/');
-    I.waitForElement('body', 15);
-    await this.acceptCookies();
-  },
+async openMobile() {
+  I.resizeWindow(390, 844);
+  I.amOnPage("/");
+
+  I.waitForElement("body", 15);
+
+  const cookiesVisible = await I.grabNumberOfVisibleElements('#onetrust-accept-btn-handler');
+  if (cookiesVisible > 0) {
+    I.click('#onetrust-accept-btn-handler');
+    I.wait(1);
+  }
+
+  I.executeScript(() => window.scrollBy(0, 400));
+},
+
 
   /**
    * Idempotent cookie accept:
@@ -51,7 +60,7 @@ async openDesktop() {
       I.wait(1);
     } else {
       // Banner already gone -> do nothing
-      // console.log('⚠️ Cookie banner already dismissed — skipping click');
+      // console.log(' Cookie banner already dismissed — skipping click');
     }
   },
 

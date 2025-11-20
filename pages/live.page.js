@@ -10,7 +10,9 @@ module.exports = {
 
   async openLiveDesktop() {
     I.resizeWindow(1440, 900);
-    I.amOnPage(this.livePath);
+
+    // 🔥 Retry navigation to avoid throttling/headless blocking in CI
+    I.retry({ retries: 2, minTimeout: 3000 }).amOnPage(this.livePath);
 
     // Accept cookies if shown
     if (await I.grabNumberOfVisibleElements('#onetrust-accept-btn-handler') > 0) {
@@ -18,7 +20,7 @@ module.exports = {
       I.wait(1);
     }
 
-    I.waitForElement('body', 10);
+    I.waitForElement('body', 20);
   },
 
   async seePlayerVisible() {
