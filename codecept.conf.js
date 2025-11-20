@@ -37,10 +37,11 @@ exports.config = {
         },
       },
 
-      timeouts: {
-        pageLoad: 60000,
-        implicit: 5000,
-      },
+  timeouts: {
+       pageLoad: process.env.CI ? 120000 : 60000,
+       implicit: 5000,
+     },
+
     },
   },
 
