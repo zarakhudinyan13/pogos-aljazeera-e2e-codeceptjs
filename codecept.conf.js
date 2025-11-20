@@ -1,11 +1,10 @@
+//  Load crypto polyfill BEFORE CodeceptJS and Cucumber
+require('./support/polyfill');
+
 const { setHeadlessWhen } = require('@codeceptjs/configure');
 
-// Detect CI and Local Run
-const isCI = process.env.CI === 'true';
-const isHeadless = isCI || process.env.HEADLESS === 'true';
-
-// Apply headless only when CI or user requests it
-setHeadlessWhen(isHeadless);
+// Enable headless only in CI or when HEADLESS=true
+setHeadlessWhen(process.env.CI === 'true' || process.env.HEADLESS === 'true');
 
 exports.config = {
   tests: "./features/*.feature",
@@ -18,7 +17,7 @@ exports.config = {
       smartWait: 8000,
       waitForTimeout: 20000,
       restart: false,
-      windowSize: isCI ? "1920x1080" : "maximize",
+      windowSize: process.env.CI ? "1920x1080" : "maximize",
 
       desiredCapabilities: {
         browserName: "chrome",
@@ -32,7 +31,7 @@ exports.config = {
             '--allow-insecure-localhost',
             '--disable-infobars',
             '--disable-blink-features=AutomationControlled',
-            ...(isHeadless ? ['--headless=new'] : [])
+            ...(process.env.CI ? ['--headless=new'] : [])
           ],
         },
       },
@@ -59,9 +58,8 @@ exports.config = {
     ],
   },
 
-  // Parallel ONLY locally to keep CI stable
-  multiple: isCI
-    ? {}
+  multiple: process.env.CI
+    ? {} // disable parallel in CI
     : {
         parallel: {
           chunks: 2,
