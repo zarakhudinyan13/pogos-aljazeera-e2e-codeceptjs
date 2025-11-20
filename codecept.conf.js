@@ -23,16 +23,20 @@ helpers: {
     desiredCapabilities: {
       browserName: "chrome",
       'goog:chromeOptions': {
-        args: [
-          '--disable-web-security',
-          '--disable-site-isolation-trials',
-          '--disable-features=IsolateOrigins,site-per-process,PrivacySandboxAdsAPIs',
-          '--no-sandbox',
-          '--disable-gpu',
-          '--allow-insecure-localhost',
-          '--disable-infobars',
-          '--disable-blink-features=AutomationControlled',
-          ...(process.env.CI ? ['--headless=new'] : [])
+         args: [
+         '--disable-web-security',
+         '--disable-site-isolation-trials',
+         '--disable-features=IsolateOrigins,site-per-process,PrivacySandboxAdsAPIs',
+         '--no-sandbox',
+         '--disable-setuid-sandbox',
+         '--disable-dev-shm-usage',
+         '--disable-gpu',
+         '--allow-insecure-localhost',
+         '--disable-infobars',
+         '--disable-blink-features=AutomationControlled',
+         '--enable-unsafe-swiftshader',
+         ...(process.env.CI || process.env.HEADLESS === 'true' ? ['--headless=new'] : [])
+         
         ],
       },
     },
