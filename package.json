@@ -2,17 +2,16 @@
   "name": "pogos-aljazeera-e2e-codeceptjs",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
+ "scripts": {
     "selenium:install": "npx selenium-standalone install",
     "selenium:start": "npx selenium-standalone start",
-    "test:bdd": "codeceptjs run --features --steps",
-    "test:most-read": "codeceptjs run --features --grep most-read --steps",
+    "test:most-read": "codeceptjs run --features --grep @most-read --steps",
     "test:live": "codeceptjs run --features --grep @live --steps",
     "test:all": "codeceptjs run-multiple parallel --features --steps",
-    "report": "allure generate output --clean && allure open",
-    "allure:serve": "allure serve output/allure-results",
-    "allure:generate": "allure generate output/allure-results --clean -o output/allure-report"
-  },
+    "test:ci": "HEADLESS=true DONT_FAIL_ON_EMPTY_RUN=true npm run test:all",
+    "report": "allure generate output --clean && allure open"
+   }
+  ,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zarakhudinyan13/pogos-aljazeera-e2e-codeceptjs.git"

@@ -1,10 +1,5 @@
 const { setHeadlessWhen } = require('@codeceptjs/configure');
 
-// Fix for crypto undefined when running parallel mode in CI
-if (typeof global.crypto === "undefined") {
-  global.crypto = require("crypto");
-}
-
 setHeadlessWhen(process.env.HEADLESS);
 
 exports.config = {
@@ -17,23 +12,27 @@ exports.config = {
       browser: "chrome",
       smartWait: 8000,
       waitForTimeout: 20000,
-      restart: false,
-      windowSize: "maximize",
+      restart: true,   // required for CI stability
+      windowSize: "1920x1080",
 
       desiredCapabilities: {
         browserName: "chrome",
         'goog:chromeOptions': {
           args: [
-            '--disable-site-isolation-trials',
-            '--disable-web-security',
-            '--disable-features=IsolateOrigins,site-per-process,PrivacySandboxAdsAPIs',
+            '--headless=new',
             '--no-sandbox',
             '--disable-gpu',
-            '--allow-insecure-localhost',
+            '--disable-dev-shm-usage',
+            '--disable-web-security',
             '--disable-infobars',
-            '--disable-blink-features=AutomationControlled'
-          ],
-        },
+            '--allow-insecure-localhost',
+            '--disable-features=VizDisplayCompositor,IsolateOrigins,site-per-process,PrivacySandboxAdsAPIs',
+            '--disable-popup-blocking',
+            '--disable-extensions',
+            '--disable-blink-features=AutomationControlled',
+            '--remote-debugging-port=9222'
+          ]
+        }
       },
 
       timeouts: {
@@ -58,11 +57,11 @@ exports.config = {
     ],
   },
 
-  // Parallel execution config
   multiple: {
     parallel: {
-      chunks: 2, // Run in 2 workers (you can set 3 or 4)
-      browsers: ["chrome"],
+      // Works locally in parallel, runs 1 chunk in CI for stability
+      chunks: process.env.CI ? 1 : 2,
+      browsers: ["chrome"]
     }
   },
 

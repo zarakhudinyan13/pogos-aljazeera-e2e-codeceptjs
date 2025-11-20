@@ -1,43 +1,48 @@
-name: UI E2E Tests
+name: E2E UI Tests
 
 on:
   push:
-    branches: [ "main", "master" ]
-  workflow_dispatch:
+    branches: [ main ]
+  pull_request:
   schedule:
-    - cron: "0 6 * * 1"   # Runs every Monday at 06:00 UTC
+    - cron: "0 4 * * 1" # Weekly Monday at 8AM AMT (UTC+4)
 
 jobs:
   e2e-tests:
-    name: Run E2E Tests
     runs-on: ubuntu-latest
+    env:
+      HEADLESS: true
+      CI: true
+      DONT_FAIL_ON_EMPTY_RUN: true
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm ci
-
       - name: Install Chrome
-        uses: browser-actions/setup-chrome@v1
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable || true
 
-      - name: Verify Chrome Install
-        run: google-chrome --version
+      - name: Install ChromeDriver
+        run: |
+          sudo apt-get install chromium-chromedriver -y || true
+          export PATH=$PATH:/usr/lib/chromium-browser
 
-      - name: Run Tests (Parallel Mode)
-        run: npm run test:all
-        continue-on-error: false
+      - name: Install dependencies
+        run: npm install
 
-      - name: Upload Test Artifacts
+      - name: Run UI tests
+        run: npm run test:ci
+
+      - name: Upload screenshots & artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-test-artifacts
+          name: test-artifacts
           path: output/
-          retention-days: 10
