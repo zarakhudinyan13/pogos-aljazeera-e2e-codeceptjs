@@ -1,5 +1,10 @@
 const { setHeadlessWhen } = require('@codeceptjs/configure');
 
+// Fix for crypto undefined when running parallel mode in CI
+if (typeof global.crypto === "undefined") {
+  global.crypto = require("crypto");
+}
+
 setHeadlessWhen(process.env.HEADLESS);
 
 exports.config = {
@@ -53,19 +58,19 @@ exports.config = {
     ],
   },
 
+  // Parallel execution config
+  multiple: {
+    parallel: {
+      chunks: 2, // Run in 2 workers (you can set 3 or 4)
+      browsers: ["chrome"],
+    }
+  },
+
   plugins: {
     retryFailedStep: { enabled: true },
     screenshotOnFail: { enabled: true },
     pauseOnFail: {},
     allure: { enabled: false },
-    autoDelay: { enabled: true, delayBefore: 200, delayAfter: 200 }
-  },
-
-  /** 🏎️ Parallel run support */
-  multiple: {
-    parallel: {
-      browsers: ["chrome"], // can add Firefox later
-      chunks: 2, // increase to 3 if your machine can handle it
-    }
+    autoDelay: { enabled: true, delayBefore: 200, delayAfter: 200 },
   },
 };
