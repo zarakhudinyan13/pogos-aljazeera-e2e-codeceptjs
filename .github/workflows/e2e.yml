@@ -1,34 +1,30 @@
-name: E2E UI Tests
+name: UI Tests
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
+    branches: [ main ]
   schedule:
-    - cron: "0 6 * * 1"  # Runs every Monday at 6:00 UTC
+    - cron: "0 4 * * 1" # Weekly Monday run
 
 jobs:
-  ui-tests:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm install
+      - run: npm ci
 
-      - name: Run UI Tests (CI mode)
+      - name: Run Tests (Headless CI Mode)
+        env:
+          CI: true
         run: npm run test:ci
 
-      - name: Upload Test Artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: test-output
-          path: output/
+          name: ui-test-report
+          path: output

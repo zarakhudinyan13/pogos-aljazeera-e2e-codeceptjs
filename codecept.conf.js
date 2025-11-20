@@ -1,6 +1,11 @@
 const { setHeadlessWhen } = require('@codeceptjs/configure');
 
-setHeadlessWhen(process.env.HEADLESS);
+// Detect CI and Local Run
+const isCI = process.env.CI === 'true';
+const isHeadless = isCI || process.env.HEADLESS === 'true';
+
+// Apply headless only when CI or user requests it
+setHeadlessWhen(isHeadless);
 
 exports.config = {
   tests: "./features/*.feature",
@@ -13,7 +18,7 @@ exports.config = {
       smartWait: 8000,
       waitForTimeout: 20000,
       restart: false,
-      windowSize: "maximize",
+      windowSize: isCI ? "1920x1080" : "maximize",
 
       desiredCapabilities: {
         browserName: "chrome",
@@ -27,7 +32,7 @@ exports.config = {
             '--allow-insecure-localhost',
             '--disable-infobars',
             '--disable-blink-features=AutomationControlled',
-            '--headless=new'
+            ...(isHeadless ? ['--headless=new'] : [])
           ],
         },
       },
@@ -54,8 +59,9 @@ exports.config = {
     ],
   },
 
-  multiple: process.env.CI
-    ? {} // disable parallel in CI to avoid crypto & webdriver errors
+  // Parallel ONLY locally to keep CI stable
+  multiple: isCI
+    ? {}
     : {
         parallel: {
           chunks: 2,
