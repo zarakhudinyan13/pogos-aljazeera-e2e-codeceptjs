@@ -12,27 +12,24 @@ exports.config = {
       browser: "chrome",
       smartWait: 8000,
       waitForTimeout: 20000,
-      restart: true,   // required for CI stability
-      windowSize: "1920x1080",
+      restart: false,
+      windowSize: "maximize",
 
       desiredCapabilities: {
         browserName: "chrome",
         'goog:chromeOptions': {
           args: [
-            '--headless=new',
+            '--disable-web-security',
+            '--disable-site-isolation-trials',
+            '--disable-features=IsolateOrigins,site-per-process,PrivacySandboxAdsAPIs',
             '--no-sandbox',
             '--disable-gpu',
-            '--disable-dev-shm-usage',
-            '--disable-web-security',
-            '--disable-infobars',
             '--allow-insecure-localhost',
-            '--disable-features=VizDisplayCompositor,IsolateOrigins,site-per-process,PrivacySandboxAdsAPIs',
-            '--disable-popup-blocking',
-            '--disable-extensions',
+            '--disable-infobars',
             '--disable-blink-features=AutomationControlled',
-            '--remote-debugging-port=9222'
-          ]
-        }
+            '--headless=new'
+          ],
+        },
       },
 
       timeouts: {
@@ -57,13 +54,14 @@ exports.config = {
     ],
   },
 
-  multiple: {
-    parallel: {
-      // Works locally in parallel, runs 1 chunk in CI for stability
-      chunks: process.env.CI ? 1 : 2,
-      browsers: ["chrome"]
-    }
-  },
+  multiple: process.env.CI
+    ? {} // disable parallel in CI to avoid crypto & webdriver errors
+    : {
+        parallel: {
+          chunks: 2,
+          browsers: ["chrome"],
+        },
+      },
 
   plugins: {
     retryFailedStep: { enabled: true },
