@@ -2,7 +2,7 @@ name: UI Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   schedule:
     - cron: "0 4 * * 1" # Weekly Monday run
 
@@ -11,20 +11,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - run: npm ci
+      - name: Install Dependencies
+        run: npm ci --include=dev
 
-      - name: Run Tests (Headless CI Mode)
+      - name: Run UI Tests (Headless in CI)
         env:
           CI: true
+          HEADLESS: true
         run: npm run test:ci
 
-      - name: Upload Artifacts
+      - name: Upload Test Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ui-test-report
+          name: test-report
           path: output
