@@ -10,40 +10,40 @@ exports.config = {
   tests: "./features/*.feature",
   output: "./output",
 
-  helpers: {
-    WebDriver: {
-      url: "https://www.aljazeera.com",
-      browser: "chrome",
-      smartWait: 8000,
-      waitForTimeout: 20000,
-      restart: false,
-      windowSize: process.env.CI ? "1920x1080" : "maximize",
+helpers: {
+  WebDriver: {
+    url: "https://www.aljazeera.com",
+    browser: "chrome",
+    smartWait: 8000,
+    waitForTimeout: 20000,
+    restart: false,
+    windowSize: process.env.CI ? "1920x1080" : "maximize",
+    keepCookies: process.env.CI ? true : false, // 🔥 Fix CI timeout issue
 
-      desiredCapabilities: {
-        browserName: "chrome",
-        'goog:chromeOptions': {
-          args: [
-            '--disable-web-security',
-            '--disable-site-isolation-trials',
-            '--disable-features=IsolateOrigins,site-per-process,PrivacySandboxAdsAPIs',
-            '--no-sandbox',
-            '--disable-gpu',
-            '--disable-dev-shm-usage', 
-            '--allow-insecure-localhost',
-            '--disable-infobars',
-            '--disable-blink-features=AutomationControlled',
-            ...(process.env.CI ? ['--headless=new'] : [])
-          ],
-        },
+    desiredCapabilities: {
+      browserName: "chrome",
+      'goog:chromeOptions': {
+        args: [
+          '--disable-web-security',
+          '--disable-site-isolation-trials',
+          '--disable-features=IsolateOrigins,site-per-process,PrivacySandboxAdsAPIs',
+          '--no-sandbox',
+          '--disable-gpu',
+          '--allow-insecure-localhost',
+          '--disable-infobars',
+          '--disable-blink-features=AutomationControlled',
+          ...(process.env.CI ? ['--headless=new'] : [])
+        ],
       },
+    },
 
-  timeouts: {
-       pageLoad: process.env.CI ? 120000 : 60000,
-       implicit: 5000,
-     },
-
+    timeouts: {
+      pageLoad: 60000,
+      implicit: 5000,
     },
   },
+},
+
 
   include: {
     I: "./steps_file.js",
