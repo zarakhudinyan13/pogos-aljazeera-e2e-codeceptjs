@@ -28,6 +28,7 @@ exports.config = {
             '--disable-features=IsolateOrigins,site-per-process,PrivacySandboxAdsAPIs',
             '--no-sandbox',
             '--disable-gpu',
+            '--disable-dev-shm-usage', 
             '--allow-insecure-localhost',
             '--disable-infobars',
             '--disable-blink-features=AutomationControlled',
