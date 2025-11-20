@@ -7,12 +7,26 @@ module.exports = {
   /**
    * Desktop: open home page and handle cookies.
    */
-  async openDesktop() {
-    I.resizeWindow(1600, 1000);
-    I.amOnPage('/');
-    I.waitForElement('body', 15);
-    await this.acceptCookies();
-  },
+async openDesktop() {
+  I.resizeWindow(1600, 1000);
+  I.amOnPage("/");
+
+  // Extra stability waits ONLY in CI
+  if (process.env.CI) {
+    I.waitForElement("body", 20);
+    I.retry({ retries: 3 }).waitForElement("#onetrust-accept-btn-handler", 20);
+  } else {
+    I.waitForElement("body", 10);
+  }
+
+  if (await I.grabNumberOfVisibleElements('#onetrust-accept-btn-handler') > 0) {
+    I.click('#onetrust-accept-btn-handler');
+    I.wait(1);
+  }
+
+  // Scroll slightly to trigger lazy loading
+  I.executeScript(() => window.scrollBy(0, 400));
+},
 
   /**
    * Mobile: open home page and handle cookies.
