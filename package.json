@@ -8,6 +8,7 @@
     "test:bdd": "codeceptjs run --features --steps",
     "test:most-read": "codeceptjs run --features --grep most-read --steps",
     "test:live": "codeceptjs run --features --grep '@live' --steps",
+    "report": "allure generate output --clean && allure open",
     "allure:serve": "allure serve output/allure-results",
     "allure:generate": "allure generate output/allure-results --clean -o output/allure-report"
   },

@@ -3,55 +3,58 @@ const { setHeadlessWhen } = require('@codeceptjs/configure');
 setHeadlessWhen(process.env.HEADLESS);
 
 exports.config = {
-  tests: "./tests/*.js",
+  tests: "./features/*.feature",
   output: "./output",
 
   helpers: {
     WebDriver: {
-      url: process.env.BASE_URL || "https://www.aljazeera.com",
+      url: "https://www.aljazeera.com",
       browser: "chrome",
-      smartWait: 5000,
-      waitForTimeout: 10000,
-      timeouts: {
-        script: 60000,
-        "page load": 30000,
-      },
+      smartWait: 8000,
+      waitForTimeout: 20000,
+      restart: false,
+      windowSize: "maximize",
+
       desiredCapabilities: {
+        browserName: "chrome",
         'goog:chromeOptions': {
           args: [
-            '--disable-gpu',
+            '--disable-site-isolation-trials',
+            '--disable-web-security',
+            '--disable-features=IsolateOrigins,site-per-process',
             '--no-sandbox',
-            '--window-size=1440,900'
-          ]
-        }
-      }
-    }
+            '--disable-gpu',
+          ],
+        },
+      },
+
+      timeouts: {
+        pageLoad: 60000,
+        implicit: 5000,
+      },
+    },
   },
 
   include: {
-    I: "./support/steps_file.js",
-    HomePage: "./pages/home.page.js",
-    LivePage: "./pages/live.page.js",
-    MostPopularComponent: "./pages/components/mostPopular.component.js",
+    I: "./steps_file.js",
+    homePage: "./pages/home.page.js",
+    mostPopularComponent: "./pages/components/mostPopular.component.js",
+    livePage: "./pages/live.page.js",
   },
 
   gherkin: {
-    features: "./features/**/*.feature",
+    features: "./features/*.feature",
     steps: [
       "./step_definitions/mostRead.steps.js",
-      "./step_definitions/liveStream.steps.js"
-    ]
+      "./step_definitions/liveStream.steps.js",
+    ],
   },
 
   plugins: {
+    retryFailedStep: { enabled: true },
     screenshotOnFail: { enabled: true },
-    retryFailedStep: { enabled: true, retries: 1 },
-    allure: {
-      enabled: true,
-      require: "@codeceptjs/allure-legacy",
-      outputDir: "output/allure-results",
-    }
+    pauseOnFail: {},
+    allure: { enabled: false },
+    autoDelay: { enabled: true, delayBefore: 200, delayAfter: 200 },
   },
-
-  name: "pogos-aljazeera-e2e-codeceptjs",
 };

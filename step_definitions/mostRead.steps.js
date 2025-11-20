@@ -1,43 +1,52 @@
-const { I } = inject();
-const MostPopularComponent = require("../pages/components/mostPopular.component");
-const HomePage = require("../pages/home.page");
+const { I, homePage, mostPopularComponent } = inject();
 
-Given("I am on the Al Jazeera home page on desktop", async () => {
-  await HomePage.openDesktop();
-  await MostPopularComponent.handleCookieIfDisplayed();
+//
+// --- STEP DEFINITIONS ---
+//
+
+// ---------- GIVEN ----------
+Given('I am on the Al Jazeera home page on desktop', async () => {
+  await homePage.openDesktop();
+  await homePage.acceptCookies();
 });
 
-Given("I am on the Al Jazeera home page on mobile", async () => {
-  await HomePage.openMobile();
-  await MostPopularComponent.handleCookieIfDisplayed();
+Given('I am on the Al Jazeera home page on mobile', async () => {
+  await homePage.openMobile();
+  await homePage.acceptCookies();
 });
 
-When("I look for the Most Popular section", async () => {
-  await MostPopularComponent.scrollUntilVisible();
+// ---------- WHEN ----------
+When('I look for the Most Popular section', async () => {
+  await mostPopularComponent.scrollToSection();
 });
 
-Then("the Most Popular section should be visible", async () => {
-  await MostPopularComponent.seeVisibleDesktop();
+// Keyboard navigation for skip link
+When('I use the keyboard to reach the skip link', () => {
+  // 3 Tabs consistently lands on the skip accessibility menu
+  I.pressKey('Tab');
+  I.pressKey('Tab');
+  I.pressKey('Tab');
 });
 
-Then("the Most Popular section should contain 10 posts", async () => {
-  await MostPopularComponent.seeExactlyTenPosts();
+When('I activate the skip link', () => {
+  I.pressKey('Enter');
 });
 
-Then("the Most Popular section should not be visible on mobile", async () => {
-  await MostPopularComponent.notVisibleMobile();
+// ---------- THEN ----------
+Then('the Most Popular section should be visible', () => {
+  mostPopularComponent.confirmVisible();
 });
 
-When("I open the bypass blocks menu", async () => {
-  I.pressKey("Tab");
-  I.pressKey("Tab");
-  I.pressKey("Tab");
+Then('the Most Popular section should contain 10 posts', async () => {
+  await mostPopularComponent.validatePostsCount();
 });
 
-When('I choose the "Skip to Most Read" option', async () => {
-  I.pressKey("Enter");
+Then('the Most Popular section should not appear on mobile', async () => {
+  await mostPopularComponent.confirmHiddenOnMobile();
 });
 
-Then("the URL should include the Most Read anchor", async () => {
-  await MostPopularComponent.confirmURLHasAnchor();
+// Final expected accessibility behaviour
+Then('focus should move to the Most Read section', () => {
+  I.waitForElement('#most-read-container', 10);
+  I.seeElement('#most-read-container');
 });

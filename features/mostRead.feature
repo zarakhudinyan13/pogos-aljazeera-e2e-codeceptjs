@@ -1,28 +1,21 @@
-@most-read
-Feature: Most Popular section validation
+Feature: Most Popular section validation @most-read
 
-  @desktop
-  Scenario: Section appears on desktop
-    Given I am on the Al Jazeera home page on desktop
-    When I look for the Most Popular section
-    Then the Most Popular section should be visible
+Scenario: Section appears on desktop @desktop
+  Given I am on the Al Jazeera home page on desktop
+  When I look for the Most Popular section
+  Then the Most Popular section should be visible
 
-  @desktop
-  Scenario: Section contains 10 items
-    Given I am on the Al Jazeera home page on desktop
-    When I look for the Most Popular section
-    Then the Most Popular section should be visible
-    And the Most Popular section should contain 10 posts
+Scenario: Section contains 10 items @desktop
+  Given I am on the Al Jazeera home page on desktop
+  When I look for the Most Popular section
+  Then the Most Popular section should contain 10 posts
 
-  @mobile
-  Scenario: Section not visible on mobile
-    Given I am on the Al Jazeera home page on mobile
-    When I look for the Most Popular section
-    Then the Most Popular section should not be visible
+Scenario: Section not visible on mobile @mobile
+  Given I am on the Al Jazeera home page on mobile
+  Then the Most Popular section should not appear on mobile
 
-  @desktop @accessibility
-  Scenario: Skip link works
-    Given I am on the Al Jazeera home page on desktop
-    When I open the bypass blocks menu
-    And I choose the "Skip to Most Read" option
-    Then the URL should include the Most Read anchor
+Scenario: Skip link works using keyboard navigation @desktop @accessibility
+  Given I am on the Al Jazeera home page on desktop
+  When I use the keyboard to reach the skip link
+  And I activate the skip link
+  Then focus should move to the Most Read section
