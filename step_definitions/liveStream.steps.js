@@ -1,13 +1,14 @@
-const { LivePage } = inject();
+const { I } = inject();
+const livePage = require('../pages/live.page.js');
 
 Given("I am on the Al Jazeera live page on desktop", () => {
-  LivePage.openLiveDesktop();
+  livePage.openLiveDesktop();
 });
 
 Then("the livestream player should be visible", () => {
-  LivePage.seePlayerVisible();
+  livePage.seePlayerVisible();
 });
 
 Then("the Switch Player button should be visible", () => {
-  LivePage.seeSwitchButtonVisible();
+  livePage.seeSwitchButtonVisible();
 });

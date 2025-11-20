@@ -21,9 +21,12 @@ exports.config = {
           args: [
             '--disable-site-isolation-trials',
             '--disable-web-security',
-            '--disable-features=IsolateOrigins,site-per-process',
+            '--disable-features=IsolateOrigins,site-per-process,PrivacySandboxAdsAPIs',
             '--no-sandbox',
             '--disable-gpu',
+            '--allow-insecure-localhost',
+            '--disable-infobars',
+            '--disable-blink-features=AutomationControlled'
           ],
         },
       },
@@ -55,6 +58,14 @@ exports.config = {
     screenshotOnFail: { enabled: true },
     pauseOnFail: {},
     allure: { enabled: false },
-    autoDelay: { enabled: true, delayBefore: 200, delayAfter: 200 },
+    autoDelay: { enabled: true, delayBefore: 200, delayAfter: 200 }
+  },
+
+  /** 🏎️ Parallel run support */
+  multiple: {
+    parallel: {
+      browsers: ["chrome"], // can add Firefox later
+      chunks: 2, // increase to 3 if your machine can handle it
+    }
   },
 };
